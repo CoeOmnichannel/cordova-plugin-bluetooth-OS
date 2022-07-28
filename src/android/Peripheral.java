@@ -734,11 +734,11 @@ public class Peripheral extends BluetoothGattCallback {
 	
 	public void retrieveServices(CallbackContext callbackContext) {
 		if (!isConnected()) {
-			callbackContext.error("Device is not connected", null);
+			callbackContext.error("Device is not connected");
 			return;
 		}
 		if (gatt == null) {
-			callbackContext.error("BluetoothGatt is null", null);
+			callbackContext.error("BluetoothGatt is null");
 			return;
 		}
 		this.retrieveServicesCallback = callbackContext;
