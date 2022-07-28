@@ -83,6 +83,8 @@ public class BLECentralPlugin extends CordovaPlugin {
     private static final String START_NOTIFICATION = "startNotification"; // register for characteristic notification
     private static final String STOP_NOTIFICATION = "stopNotification"; // remove characteristic notification
 
+     private static final String RETRIEVE_SERVICES = "retrieveServices";  
+    
     private static final String IS_ENABLED = "isEnabled";
     private static final String IS_LOCATION_ENABLED = "isLocationEnabled";
     private static final String IS_CONNECTED  = "isConnected";
@@ -269,7 +271,14 @@ public class BLECentralPlugin extends CordovaPlugin {
             UUID characteristicUUID = uuidFromString(args.getString(2));
             removeNotifyCallback(callbackContext, macAddress, serviceUUID, characteristicUUID);
 
-        } else if (action.equals(IS_ENABLED)) {
+        } else if (action.equals(RETRIEVE_SERVICES)) {
+
+            String macAddress = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            
+            retrieveServices(callbackContext, macAddress, serviceUUID);
+
+        }else if (action.equals(IS_ENABLED)) {
 
             if (bluetoothAdapter.isEnabled()) {
                 callbackContext.success();
@@ -764,6 +773,15 @@ public class BLECentralPlugin extends CordovaPlugin {
 
         }
 
+    }
+    
+     public void retrieveServices(String deviceUUID, ReadableArray services, Callback callback) {
+        Log.d(LOG_TAG, "Retrieve services from: " + deviceUUID);
+        Peripheral peripheral = peripherals.get(deviceUUID);
+        if (peripheral != null) {
+            peripheral.retrieveServices(callback);
+        } else
+            callback.invoke("Peripheral not found", null);
     }
 
     private void removeNotifyCallback(CallbackContext callbackContext, String macAddress, UUID serviceUUID, UUID characteristicUUID) {
