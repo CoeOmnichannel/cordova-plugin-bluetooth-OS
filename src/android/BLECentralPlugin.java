@@ -781,7 +781,7 @@ public class BLECentralPlugin extends CordovaPlugin {
         if (peripheral != null) {
             peripheral.retrieveServices(callbackContext);
         } else{
-            callbackContext.error("Peripheral not found", null);
+            callbackContext.error("Peripheral not found");
         }
     }
 
