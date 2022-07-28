@@ -780,8 +780,9 @@ public class BLECentralPlugin extends CordovaPlugin {
         Peripheral peripheral = peripherals.get(deviceUUID);
         if (peripheral != null) {
             peripheral.retrieveServices(callback);
-        } else
+        } else{
             callback.invoke("Peripheral not found", null);
+        }
     }
 
     private void removeNotifyCallback(CallbackContext callbackContext, String macAddress, UUID serviceUUID, UUID characteristicUUID) {
