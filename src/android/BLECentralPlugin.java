@@ -775,13 +775,13 @@ public class BLECentralPlugin extends CordovaPlugin {
 
     }
     
-     public void retrieveServices(Callback callback, String deviceUUID, ReadableArray services) {
+     public void retrieveServices(CallbackContext callbackContext, String deviceUUID, UUID services) {
         Log.w(TAG, "Retrieve services from: " + deviceUUID);
          Peripheral peripheral = peripherals.get(deviceUUID);
         if (peripheral != null) {
-            peripheral.retrieveServices(callback);
+            peripheral.retrieveServices(callbackContext);
         } else{
-            callback.invoke("Peripheral not found", null);
+            callbackContext.error("Peripheral not found", null);
         }
     }
 
