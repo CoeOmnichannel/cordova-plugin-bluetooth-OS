@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.bluetooth.*;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.LOG;
@@ -305,6 +306,15 @@ public class Peripheral extends BluetoothGattCallback {
 		} else {
 			LOG.e(TAG, "Could not enqueue setNotify command");
 		}
+	}
+	
+	private void sendBackrError(final CallbackContext callback, final String message) {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					callback.error(message);
+				}
+			});
 	}
 	
 	private void completedCommand() {
