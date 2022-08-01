@@ -17,6 +17,7 @@ package com.megster.cordova.ble.central;
 import android.app.Activity;
 
 import android.bluetooth.*;
+import NotifyBufferContainer;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
