@@ -15,6 +15,7 @@
 package com.megster.cordova.ble.central;
 
 import android.app.Activity;
+import java.nio.ByteBuffer;
 
 import android.bluetooth.*;
 import android.os.Build;
@@ -39,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Peripheral wraps the BluetoothDevice and provides methods to convert to JSON.
  */
-private class Peripheral extends BluetoothGattCallback {
+public class Peripheral extends BluetoothGattCallback {
 	
 	private class NotifyBufferContainer {
 
