@@ -275,7 +275,7 @@ public class BLECentralPlugin extends CordovaPlugin {
             }
             Peripheral peripheral = peripherals.get(deviceUUID);
             if (peripheral != null) {
-                peripheral.registerNotify(serviceUUID, characteristicUUID), 1, callbackContext);
+                peripheral.registerNotify(serviceUUID, characteristicUUID, 1, callbackContext);
             } else{
                     callbackContext.error("Peripheral not found");
             }
