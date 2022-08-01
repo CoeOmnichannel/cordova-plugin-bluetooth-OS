@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Peripheral extends BluetoothGattCallback {
 	
-	private class NotifyBufferContainer {
+public class NotifyBufferContainer {
 
     public final Integer maxBufferSize;
     private Integer bufferCount;
