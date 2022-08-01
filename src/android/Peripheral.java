@@ -31,7 +31,6 @@ import java.util.Queue;
 import java.util.*;
 import android.os.Handler;
 
-import NotifyBufferContainer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import java.lang.reflect.Method;
