@@ -259,10 +259,29 @@ public class BLECentralPlugin extends CordovaPlugin {
 
         } else if (action.equals(START_NOTIFICATION)) {
 
-            String macAddress = args.getString(0);
+           /* String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
-            registerNotifyCallback(callbackContext, macAddress, serviceUUID, characteristicUUID);
+            registerNotifyCallback(callbackContext, macAddress, serviceUUID, characteristicUUID); */
+            
+             String deviceUUID = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            UUID characteristicUUID = uuidFromString(args.getString(2));
+              
+            LOG.w(TAG, "startNotification");
+            if (serviceUUID == null || characteristicUUID == null) {
+                callbackContext.error("ServiceUUID and characteristicUUID required.");
+                return;
+            }
+            Peripheral peripheral = peripherals.get(deviceUUID);
+            if (peripheral != null) {
+                peripheral.registerNotify(UUIDHelper.uuidFromString(serviceUUID),
+                        UUIDHelper.uuidFromString(characteristicUUID), 1, callback);
+            } else{
+                    callbackContext.error("Peripheral not found");
+            }
+        }    
+            
 
         } else if (action.equals(STOP_NOTIFICATION)) {
 
