@@ -29,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Queue;
 import java.util.*;
+import android.os.Handler;
+
 import NotifyBufferContainer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -68,6 +70,7 @@ public class Peripheral extends BluetoothGattCallback {
     private CallbackContext registerNotifyCallback;
     private Activity currentActivity;
     private CallbackContext retrieveServicesCallback;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 	
     private final Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
     private boolean commandQueueBusy = false;
