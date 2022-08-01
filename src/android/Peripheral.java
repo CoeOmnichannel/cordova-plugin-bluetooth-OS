@@ -51,7 +51,7 @@ public class Peripheral extends BluetoothGattCallback {
     private boolean autoconnect = false;
     private boolean connected = false;
     private boolean connecting = false;
-    private ConcurrentLinkedQueue<BLECommand> commandQueue = new ConcurrentLinkedQueue<BLECommand>();
+    //private ConcurrentLinkedQueue<BLECommand> commandQueue = new ConcurrentLinkedQueue<BLECommand>();
     private final AtomicBoolean bleProcessing = new AtomicBoolean();
 
     BluetoothGatt gatt;
