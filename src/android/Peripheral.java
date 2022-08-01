@@ -44,6 +44,7 @@ public class Peripheral extends BluetoothGattCallback {
     public final static UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUIDHelper.uuidFromString("2902");
     private static final String CHARACTERISTIC_NOTIFICATION_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
     private static final String TAG = "Peripheral";
+    private final Map<String, NotifyBufferContainer> bufferedCharacteristics;
 
     private static final int FAKE_PERIPHERAL_RSSI = 0x7FFFFFFF;
 
@@ -79,6 +80,7 @@ public class Peripheral extends BluetoothGattCallback {
         this.device = device;
         this.advertisingRSSI = FAKE_PERIPHERAL_RSSI;
         this.advertisingData = null;
+	this.bufferedCharacteristics = new HashMap<String, NotifyBufferContainer>();
 
     }
 
@@ -87,6 +89,7 @@ public class Peripheral extends BluetoothGattCallback {
         this.device = device;
         this.advertisingRSSI = advertisingRSSI;
         this.advertisingData = scanRecord;
+	this.bufferedCharacteristics = new HashMap<String, NotifyBufferContainer>();
 
     }
 
