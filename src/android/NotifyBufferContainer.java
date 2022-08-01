@@ -1,4 +1,4 @@
-package it.innove;
+package com.megster.cordova.ble.central;
 
 import java.nio.ByteBuffer;
 
