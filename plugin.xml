@@ -76,17 +76,17 @@
 
         <hook type="after_prepare" src="hooks/after_prepare.js"/>
 
-        <source-file src="src/android/BLECentralPlugin.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/BLECentralPlugin.java"
             target-dir="src/com/megster/cordova/ble/central"/>
-        <source-file src="src/android/SequentialCallbackContext.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/SequentialCallbackContext.java"
             target-dir="src/com/megster/cordova/ble/central"/>
-        <source-file src="src/android/BLECommand.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/BLECommand.java"
             target-dir="src/com/megster/cordova/ble/central"/>
-        <source-file src="src/android/Peripheral.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/Peripheral.java"
             target-dir="src/com/megster/cordova/ble/central"/>
-        <source-file src="src/android/Helper.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/Helper.java"
             target-dir="src/com/megster/cordova/ble/central"/>
-        <source-file src="src/android/UUIDHelper.java"
+        <source-file src="src/android/com/megster/cordova/ble/central/UUIDHelper.java"
             target-dir="src/com/megster/cordova/ble/central"/>
 
     </platform>
