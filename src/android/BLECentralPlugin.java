@@ -280,7 +280,7 @@ public class BLECentralPlugin extends CordovaPlugin {
             } else{
                     callbackContext.error("Peripheral not found");
             }
-        }    
+           
             
 
         } else if (action.equals(STOP_NOTIFICATION)) {
