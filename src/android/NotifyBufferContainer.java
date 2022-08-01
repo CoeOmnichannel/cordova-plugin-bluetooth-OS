@@ -2,7 +2,9 @@ package com.megster.cordova.ble.central;
 
 import java.nio.ByteBuffer;
 
+
 public class NotifyBufferContainer {
+    
     public final Integer maxBufferSize;
     private Integer bufferCount;
     public ByteBuffer items;
