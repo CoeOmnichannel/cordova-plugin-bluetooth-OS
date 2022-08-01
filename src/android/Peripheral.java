@@ -42,6 +42,7 @@ public class Peripheral extends BluetoothGattCallback {
     // 0x2902 org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
     //public final static UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB");
     public final static UUID CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = UUIDHelper.uuidFromString("2902");
+    private static final String CHARACTERISTIC_NOTIFICATION_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
     private static final String TAG = "Peripheral";
 
     private static final int FAKE_PERIPHERAL_RSSI = 0x7FFFFFFF;
