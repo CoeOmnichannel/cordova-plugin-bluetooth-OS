@@ -26,8 +26,8 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.*;
+import java.util.Queue;
+ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import java.lang.reflect.Method;
@@ -61,8 +61,12 @@ public class Peripheral extends BluetoothGattCallback {
     private CallbackContext readCallback;
     private CallbackContext writeCallback;
     private CallbackContext requestMtuCallback;
+    private CallbackContext registerNotifyCallback;
     private Activity currentActivity;
     private CallbackContext retrieveServicesCallback;
+	
+    private final Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
+    private boolean commandQueueBusy = false;
 
     private Map<String, SequentialCallbackContext> notificationCallbacks = new HashMap<String, SequentialCallbackContext>();
 
@@ -207,6 +211,144 @@ public class Peripheral extends BluetoothGattCallback {
             }
         }
     }
+	
+	
+	/**
+	register notify
+	*/
+	
+	public void registerNotify(UUID serviceUUID, UUID characteristicUUID, Integer buffer, CallbackContext callback) {
+		LOG.d(TAG, "registerNotify");
+		if (buffer > 1) {
+			LOG.d(TAG, "registerNotify using buffer");
+			String bufferKey = this.bufferedCharacteristicsKey(serviceUUID.toString(), characteristicUUID.toString());
+			this.bufferedCharacteristics.put(bufferKey, new NotifyBufferContainer(buffer));
+		}
+		this.setNotify(serviceUUID, characteristicUUID, true, callback);
+	}
+	
+	/**
+	setNotify
+	*/
+	private void setNotify(UUID serviceUUID, UUID characteristicUUID, final Boolean notify, CallbackContext callback) {
+		if (! isConnected() || gatt == null) {
+			callback.error("Device is not connected");
+			return;
+		}
+
+		BluetoothGattService service = gatt.getService(serviceUUID);
+		final BluetoothGattCharacteristic characteristic = findNotifyCharacteristic(service, characteristicUUID);
+
+		if (characteristic == null) {
+			callback.error("Characteristic " + characteristicUUID + " not found");			
+			return;
+		}
+
+		if (! gatt.setCharacteristicNotification(characteristic, notify)) {
+			callback.error("Failed to register notification for " + characteristicUUID);
+			return;
+		}
+
+		final BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUIDHelper.uuidFromString(CHARACTERISTIC_NOTIFICATION_CONFIG));
+		if (descriptor == null) {
+			callback.error("Set notification failed for " + characteristicUUID);
+			return;
+		}
+
+		// Prefer notify over indicate
+		byte[] value;
+		if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+			LOG.d(TAG, "Characteristic " + characteristicUUID + " set NOTIFY");
+			value = notify ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+		} else if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
+			LOG.d(TAG, "Characteristic " + characteristicUUID + " set INDICATE");
+			value = notify ? BluetoothGattDescriptor.ENABLE_INDICATION_VALUE : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+		} else {
+			String msg = "Characteristic " + characteristicUUID + " does not have NOTIFY or INDICATE property set";
+			LOG.d(TAG, msg);
+			
+			callback.error(msg);
+			return;
+		}
+		final byte[] finalValue = notify ? value : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
+		final CallbackContext finalCallback = callback;
+
+		boolean result = commandQueue.add(new Runnable() {
+				@Override
+				public void run() {
+					if (! isConnected()) {
+						completedCommand();
+						return;
+					}
+
+					boolean result = false;
+					try {
+						result = gatt.setCharacteristicNotification(characteristic, notify);
+						// Then write to descriptor
+						descriptor.setValue(finalValue);
+						registerNotifyCallback = finalCallback;
+						result = gatt.writeDescriptor(descriptor);
+					} catch(Exception e) {
+						LOG.d(TAG, "Exception in setNotify: " + e);
+					}
+
+					if (! result) {
+						sendBackrError(registerNotifyCallback, "writeDescriptor failed for descriptor: " + descriptor.getUuid());
+						registerNotifyCallback = null;
+						completedCommand();
+					}
+				}
+			});
+
+		if (result) {
+			nextCommand();
+		} else {
+			LOG.e(TAG, "Could not enqueue setNotify command");
+		}
+	}
+	
+	private void completedCommand() {
+		commandQueue.poll();
+		commandQueueBusy = false;
+		nextCommand();
+	}
+
+	private void nextCommand() {
+		synchronized (this) {
+			if (commandQueueBusy) {
+				LOG.d(TAG, "Command queue busy");
+				return;
+			}
+
+			final Runnable nextCommand = commandQueue.peek();
+			if (nextCommand == null) {
+				LOG.d(TAG, "Command queue empty");
+				return;
+			}
+
+			// Check if we still have a valid gatt object
+			if (gatt == null) {
+				LOG.d(TAG, "Error, gatt is null");
+				commandQueue.clear();
+				commandQueueBusy = false;
+				return;
+			}
+
+			// Execute the next command in the queue
+			commandQueueBusy = true;
+			mainHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							nextCommand.run();
+						} catch (Exception ex) {
+							LOG.d(TAG, "Error, command exception");
+							completedCommand();
+						}
+					}
+				});
+		}
+	}
 
     /**
      * Uses reflection to refresh the device cache. This *might* be helpful if a peripheral changes
