@@ -228,6 +228,13 @@ public class Peripheral extends BluetoothGattCallback {
 		this.setNotify(serviceUUID, characteristicUUID, true, callback);
 	}
 	
+	/*
+	* bufferedCharacteristicsKey
+	*/
+	private String bufferedCharacteristicsKey(String serviceUUID, String characteristicUUID) {
+		return serviceUUID + "-" + characteristicUUID;
+	}
+	
 	/**
 	setNotify
 	*/
