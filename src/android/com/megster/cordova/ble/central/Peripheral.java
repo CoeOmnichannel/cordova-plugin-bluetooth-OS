@@ -90,7 +90,7 @@ public class NotifyBufferContainer {
     private boolean autoconnect = false;
     private boolean connected = false;
     private boolean connecting = false;
-  //  private ConcurrentLinkedQueue<BLECommand> commandQueue = new ConcurrentLinkedQueue<BLECommand>();
+    private ConcurrentLinkedQueue<BLECommand> commandQueue = new ConcurrentLinkedQueue<BLECommand>();
     private final AtomicBoolean bleProcessing = new AtomicBoolean();
 
     BluetoothGatt gatt;
@@ -105,7 +105,7 @@ public class NotifyBufferContainer {
     private CallbackContext retrieveServicesCallback;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 	
-    private final Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
+   // private final Queue<Runnable> commandQueue = new ConcurrentLinkedQueue<>();
     private boolean commandQueueBusy = false;
 
     private Map<String, SequentialCallbackContext> notificationCallbacks = new HashMap<String, SequentialCallbackContext>();
