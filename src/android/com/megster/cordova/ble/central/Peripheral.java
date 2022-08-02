@@ -322,6 +322,10 @@ public class NotifyBufferContainer {
 		final byte[] finalValue = notify ? value : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
 		final CallbackContext finalCallback = callback;
 
+		
+		 registerNotifyCallback(callback, serviceUUID, characteristicUUID);	
+		
+		/*
 		boolean result = commandQueue.add(new BLECommand(callback,serviceUUID,characteristicUUID, 10001) {
 				@Override
 				public void run() {
@@ -348,12 +352,13 @@ public class NotifyBufferContainer {
 					}
 				}
 			});
+		
 
 		if (result) {
 			nextCommand();
 		} else {
 			LOG.e(TAG, "Could not enqueue setNotify command");
-		}
+		}*/
 	}
 	
 	private void sendBackrError(final CallbackContext callback, final String message) {
@@ -378,7 +383,7 @@ public class NotifyBufferContainer {
 				return;
 			}
 
-			final BLECommand nextCommand = commandQueue.peek();
+			final Runnable nextCommand = commandQueue.peek();
 			if (nextCommand == null) {
 				LOG.d(TAG, "Command queue empty");
 				return;
