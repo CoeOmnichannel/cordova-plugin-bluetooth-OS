@@ -766,6 +766,7 @@ public class BLECentralPlugin extends CordovaPlugin {
 
             //peripheral.setOnDataCallback(serviceUUID, characteristicUUID, callbackContext);
             peripheral.queueRegisterNotifyCallback(callbackContext, serviceUUID, characteristicUUID);
+            
 
         } else {
 
