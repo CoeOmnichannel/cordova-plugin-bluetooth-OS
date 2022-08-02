@@ -560,6 +560,9 @@ public class Peripheral extends BluetoothGattCallback {
             callbackContext.error("Failed to set client characteristic notification for " + characteristicUUID);
             commandCompleted();
         }
+	    
+	     commandCompleted();
+            return;
 
     }
 
@@ -869,6 +872,8 @@ public class Peripheral extends BluetoothGattCallback {
     // add a new command to the queue
     private void queueCommand(BLECommand command) {
         LOG.d(TAG,"Queuing Command %s", command);
+	System.out.println("queueCommand");
+	System.out.println(command);
         commandQueue.add(command);
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -887,12 +892,20 @@ public class Peripheral extends BluetoothGattCallback {
 
     // process the queue
     private void processCommands() {
+	    
+	    System.out.println("processCommands");
+	
+	    
         final boolean canProcess = bleProcessing.compareAndSet(false, true);
         if (!canProcess) { return; }
         LOG.d(TAG,"Processing Commands");
 
         BLECommand command = commandQueue.poll();
         if (command != null) {
+		
+		System.out.println("command.getType() ");
+		System.out.println(command.getType());
+		
             if (command.getType() == BLECommand.READ) {
                 LOG.d(TAG,"Read %s", command.getCharacteristicUUID());
                 readCharacteristic(command.getCallbackContext(), command.getServiceUUID(), command.getCharacteristicUUID());
