@@ -322,7 +322,7 @@ public class NotifyBufferContainer {
 		final byte[] finalValue = notify ? value : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
 		final CallbackContext finalCallback = callback;
 
-		boolean result = commandQueue.add(new Runnable() {
+		boolean result = commandQueue.add(new BLECommand() {
 				@Override
 				public void run() {
 					if (! isConnected()) {
@@ -378,7 +378,7 @@ public class NotifyBufferContainer {
 				return;
 			}
 
-			final Runnable nextCommand = commandQueue.peek();
+			final BLECommand nextCommand = commandQueue.peek();
 			if (nextCommand == null) {
 				LOG.d(TAG, "Command queue empty");
 				return;
@@ -394,7 +394,7 @@ public class NotifyBufferContainer {
 
 			// Execute the next command in the queue
 			commandQueueBusy = true;
-			mainHandler.post(new Runnable() {
+			mainHandler.post(new BLECommand() {
 					@Override
 					public void run() {
 						try {
