@@ -454,7 +454,7 @@ public class Peripheral extends BluetoothGattCallback {
         synchronized(this) {
             if (writeCallback != null) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    writeCallback.success();
+                    writeCallback.success(characteristic.getValue());
                 } else {
                     writeCallback.error(status);
                 }
