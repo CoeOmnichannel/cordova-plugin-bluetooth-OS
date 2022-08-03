@@ -910,9 +910,11 @@ public class Peripheral extends BluetoothGattCallback {
                 LOG.d(TAG,"Read %s", command.getCharacteristicUUID());
                 readCharacteristic(command.getCallbackContext(), command.getServiceUUID(), command.getCharacteristicUUID());
             } else if (command.getType() == BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) {
+		    System.out.println("WRITE_TYPE_DEFAULT");
                 LOG.d(TAG,"Write %s", command.getCharacteristicUUID());
                 writeCharacteristic(command.getCallbackContext(), command.getServiceUUID(), command.getCharacteristicUUID(), command.getData(), command.getType());
             } else if (command.getType() == BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE) {
+		    System.out.println("WRITE_TYPE_NO_RESPONSE");
                 LOG.d(TAG,"Write No Response %s", command.getCharacteristicUUID());
                 writeCharacteristic(command.getCallbackContext(), command.getServiceUUID(), command.getCharacteristicUUID(), command.getData(), command.getType());
             } else if (command.getType() == BLECommand.REGISTER_NOTIFY) {
