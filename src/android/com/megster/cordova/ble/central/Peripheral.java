@@ -451,22 +451,11 @@ public class Peripheral extends BluetoothGattCallback {
         super.onCharacteristicWrite(gatt, characteristic, status);
         LOG.d(TAG, "onCharacteristicWrite %s", characteristic);
 
-	    if (writeCallback != null) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    //writeCallback.success(characteristic.getValue());
-			writeCallback.success();
-                } else {
-                    writeCallback.error(status);
-                }
-
-                writeCallback = null;
-            }
-	/*    
         synchronized(this) {
             if (writeCallback != null) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    //writeCallback.success(characteristic.getValue());
-			writeCallback.success();
+                    writeCallback.success();
+			
                 } else {
                     writeCallback.error(status);
                 }
@@ -474,8 +463,7 @@ public class Peripheral extends BluetoothGattCallback {
                 writeCallback = null;
             }
         }
-	    */
-
+	   
         commandCompleted();
     }
 
