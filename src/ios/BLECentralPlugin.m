@@ -1087,6 +1087,11 @@
 
 - (NSArray<CBUUID *> *) uuidStringsToCBUUIDs: (NSArray<NSString *> *)uuidStrings {
     NSMutableArray *uuids = [NSMutableArray new];
+    
+    if([uuidStrings isKindOfClass:[NSString class]]) {
+        return uuids;
+    }
+    
     for (int i = 0; i < [uuidStrings count]; i++) {
         CBUUID *uuid = [CBUUID UUIDWithString:[uuidStrings objectAtIndex: i]];
         [uuids addObject:uuid];
