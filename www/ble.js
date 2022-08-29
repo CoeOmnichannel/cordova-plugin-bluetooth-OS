@@ -231,7 +231,22 @@ module.exports = {
     },
 
     isEnabled: function (success, failure) {
-        cordova.exec(success, failure, 'BLE', 'isEnabled', []);
+        if(cordova.platformId == 'ios') {
+            //1st call, the state is unknown because the Central Manager is initializing
+            cordova.exec(
+                function() {
+                    success();
+                }, 
+                function() {
+                    cordova.exec(success, failure, 'BLE', 'isEnabled', []);
+                }, 
+                'BLE', 
+                'isEnabled', 
+                []
+            );
+        } else {
+            cordova.exec(success, failure, 'BLE', 'isEnabled', []);
+        }
     },
 
     // Android only
