@@ -238,7 +238,10 @@ module.exports = {
                     success();
                 }, 
                 function() {
-                    cordova.exec(success, failure, 'BLE', 'isEnabled', []);
+                    window.setTimeout(function(){
+                        cordova.exec(success, failure, 'BLE', 'isEnabled', []);
+                    }, 
+                    300);
                 }, 
                 'BLE', 
                 'isEnabled', 
